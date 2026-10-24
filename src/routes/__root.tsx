@@ -78,7 +78,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { title: "Terra Flora — Авторские букеты в Иванове" },
       {
         name: "description",
@@ -137,9 +137,9 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-screen flex-col">
+      <div className="flex min-h-[100dvh] flex-col">
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-        <main className="flex flex-grow flex-col">
+        <main className="flex flex-1 flex-col">
           <Outlet />
         </main>
       </div>

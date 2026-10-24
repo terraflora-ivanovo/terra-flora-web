@@ -12,49 +12,72 @@ const TelegramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const SocialLinks = ({ className }: { className?: string }) => (
+  <div className={className}>
+    <a
+      href="https://vk.com/"
+      aria-label="ВКонтакте"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="grid h-11 w-11 place-items-center rounded-full bg-white text-primary transition-all duration-300 hover:-translate-y-0.5"
+    >
+      <VkIcon className="h-5 w-5" />
+    </a>
+    <a
+      href="https://t.me/"
+      aria-label="Telegram"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="grid h-11 w-11 place-items-center rounded-full bg-white text-primary transition-all duration-300 hover:-translate-y-0.5"
+    >
+      <TelegramIcon className="h-5 w-5" />
+    </a>
+  </div>
+);
+
+const ContactBlock = ({ className }: { className?: string }) => (
+  <div className={className}>
+    <a href="tel:+79806894120" className="transition-opacity hover:opacity-100">
+      +7 980 689 41 20
+    </a>
+    <span>ул. Котовского, д. 23</span>
+  </div>
+);
+
+const LegalLinks = ({ className }: { className?: string }) => (
+  <div className={className}>
+    <Link to="/privacy" className="transition-opacity hover:opacity-100">
+      Политика конфиденциальности
+    </Link>
+    <Link to="/offer" className="transition-opacity hover:opacity-100">
+      Публичная оферта
+    </Link>
+  </div>
+);
+
 export function Footer() {
   return (
-    <footer className="mt-20 bg-primary text-primary-foreground shadow-[0_50vh_0_50vh_#1f4a38]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3 md:items-center lg:px-10">
+    <footer className="mt-20 bg-primary text-primary-foreground pb-[calc(3.5rem+env(safe-area-inset-bottom))]">
+      {/* Mobile: left-aligned stack */}
+      <div className="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 pt-14 text-left md:hidden lg:px-10">
+        <span className="font-logo whitespace-nowrap text-3xl tracking-wide">
+          terra <em>flora</em>
+        </span>
+        <SocialLinks className="flex items-center gap-3" />
+        <ContactBlock className="flex flex-col items-start gap-1 text-sm opacity-90" />
+        <LegalLinks className="flex flex-col items-start gap-1 text-xs opacity-70" />
+      </div>
+
+      {/* Desktop: previous 3-column grid */}
+      <div className="mx-auto hidden max-w-7xl gap-10 px-6 pt-14 md:grid md:grid-cols-3 md:items-center lg:px-10">
         <div className="flex flex-col items-start gap-6">
           <span className="font-logo whitespace-nowrap text-3xl tracking-wide">
             terra <em>flora</em>
           </span>
-          <div className="flex flex-col gap-1 text-xs opacity-70">
-            <Link to="/privacy" className="transition-opacity hover:opacity-100">
-              Политика конфиденциальности
-            </Link>
-            <Link to="/offer" className="transition-opacity hover:opacity-100">
-              Публичная оферта
-            </Link>
-          </div>
+          <LegalLinks className="flex flex-col gap-1 text-xs opacity-70" />
         </div>
-        <div className="flex flex-col items-center gap-1 text-center text-sm opacity-90">
-          <a href="tel:+79806894120" className="transition-opacity hover:opacity-100">
-            +7 980 689 41 20
-          </a>
-          <span>ул. Котовского, д. 23</span>
-        </div>
-        <div className="flex items-center justify-start gap-3 md:justify-end">
-          <a
-            href="https://vk.com/"
-            aria-label="ВКонтакте"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="grid h-11 w-11 place-items-center rounded-full bg-white text-primary transition-all duration-300 hover:-translate-y-0.5"
-          >
-            <VkIcon className="h-5 w-5" />
-          </a>
-          <a
-            href="https://t.me/"
-            aria-label="Telegram"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="grid h-11 w-11 place-items-center rounded-full bg-white text-primary transition-all duration-300 hover:-translate-y-0.5"
-          >
-            <TelegramIcon className="h-5 w-5" />
-          </a>
-        </div>
+        <ContactBlock className="flex flex-col items-center gap-1 text-center text-sm opacity-90" />
+        <SocialLinks className="flex items-center justify-end gap-3" />
       </div>
     </footer>
   );
