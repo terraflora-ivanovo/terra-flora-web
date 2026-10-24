@@ -160,7 +160,7 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
                   id="order-consent"
                   checked={agreed}
                   onCheckedChange={(v) => setAgreed(v === true)}
-                  className="mt-0.5 border-primary/40 data-[state=checked]:border-primary data-[state=checked]:bg-primary"
+                  className="mt-0.5 flex h-5 w-5 items-center justify-center rounded-full border-primary/40 shadow-none data-[state=checked]:border-primary data-[state=checked]:bg-primary [&_svg]:h-3 [&_svg]:w-3"
                 />
                 Я даю согласие на обработку персональных данных
               </label>

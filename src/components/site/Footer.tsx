@@ -14,7 +14,7 @@ const TelegramIcon = ({ className }: { className?: string }) => (
 
 export function Footer() {
   return (
-    <footer className="mt-20 bg-primary text-primary-foreground">
+    <footer className="mt-20 bg-primary text-primary-foreground shadow-[0_50vh_0_50vh_#1f4a38]">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-14 md:grid-cols-3 md:items-center lg:px-10">
         <div className="flex flex-col items-start gap-6">
           <span className="font-logo whitespace-nowrap text-3xl tracking-wide">

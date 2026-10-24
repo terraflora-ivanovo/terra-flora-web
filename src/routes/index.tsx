@@ -52,7 +52,7 @@ function Index() {
     <div className="min-h-screen text-foreground">
       <Header />
 
-      <section className="mx-auto grid max-w-7xl items-start gap-12 px-6 pb-20 pt-40 lg:grid-cols-12 lg:px-10 lg:pt-50">
+      <section className="mx-auto grid max-w-7xl items-start gap-12 px-6 pb-20 pt-8 md:pt-40 lg:grid-cols-12 lg:px-10 lg:pt-50">
         <div className="animate-fade-up relative lg:col-span-6">
           <p className="mb-6 text-xs uppercase tracking-[0.3em] text-accent lg:absolute lg:-top-10 lg:mb-0">Цветочная мастерская</p>
           <h1 className="font-display text-5xl font-light leading-[1.02] tracking-tight text-primary sm:text-6xl lg:text-7xl">
