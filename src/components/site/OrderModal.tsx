@@ -21,7 +21,6 @@ type OrderModalProps = {
 const TELEGRAM_URL =
   "https://api.telegram.org/bot8914581396:AAGdgGHjUGBI_P7ZEJayu9-R7bOKZZhjrSA/sendMessage";
 const TELEGRAM_CHAT_ID = "381101902";
-const GOOGLE_SHEET_URL = import.meta.env.VITE_GOOGLE_SHEET_URL as string;
 
 const inputCls =
   "w-full rounded-lg border border-input bg-transparent px-4 py-3 text-sm text-foreground outline-none transition-colors duration-300 placeholder:text-muted-foreground/60 focus:border-primary focus:ring-1 focus:ring-primary";
@@ -47,22 +46,22 @@ function maskPhoneDigits(digits: string): string {
   return `${result}-${d.slice(8, 10)}`;
 }
 
-export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
+export function OrderModal({ open, onOpenChange, bouquet: selectedBouquet }: OrderModalProps) {
   const [agreed, setAgreed] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [name, setName] = useState("");
+  const [nameValue, setNameValue] = useState("");
   const [nameError, setNameError] = useState(false);
   const [phoneDigits, setPhoneDigits] = useState("");
   const [phoneError, setPhoneError] = useState(false);
 
-  const phone = maskPhoneDigits(phoneDigits);
+  const phoneDisplay = maskPhoneDigits(phoneDigits);
 
   const resetModal = () => {
     setAgreed(false);
     setIsSubmitting(false);
     setIsSuccess(false);
-    setName("");
+    setNameValue("");
     setNameError(false);
     setPhoneDigits("");
     setPhoneError(false);
@@ -74,7 +73,7 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
   };
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setNameValue(e.target.value);
     if (nameError) setNameError(false);
   };
 
@@ -87,10 +86,10 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
     }
     digits = digits.slice(0, 10);
 
-    // Backspace on a formatting char (—, ), space) doesn't change digit count —
+    // Backspace on a formatting char doesn't change digit count —
     // treat it as deleting the last real digit so the mask shrinks.
     if (
-      input.length < phone.length &&
+      input.length < phoneDisplay.length &&
       digits.length === phoneDigits.length &&
       phoneDigits.length > 0
     ) {
@@ -105,7 +104,7 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
     e.preventDefault();
     if (!agreed || isSubmitting) return;
 
-    const trimmedName = name.trim();
+    const trimmedName = nameValue.trim();
     if (!trimmedName) {
       setNameError(true);
       return;
@@ -116,45 +115,48 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
       return;
     }
 
+    // Plain strings at the moment of fetch — never pass a raw object as body
+    const name = trimmedName;
+    const phone = maskPhoneDigits(phoneDigits);
+    const bouquet = selectedBouquet?.name ?? "";
+    const price = selectedBouquet?.price ?? "";
+
     const text = [
       "🌿 <b>Новый заказ!</b>",
       "",
-      `<b>Букет:</b> ${bouquet?.name ?? "—"}`,
-      `<b>Цена:</b> ${bouquet?.price ?? "—"}`,
-      `<b>Имя:</b> ${trimmedName}`,
+      `<b>Букет:</b> ${bouquet || "—"}`,
+      `<b>Цена:</b> ${price || "—"}`,
+      `<b>Имя:</b> ${name}`,
       `<b>Телефон:</b> ${phone}`,
     ].join("\n");
 
-    const sheetPayload = {
-      name: trimmedName,
-      phone,
-      bouquet: bouquet?.name ?? "",
-      price: bouquet?.price ?? "",
-    };
+    const sheetUrl = import.meta.env.VITE_GOOGLE_SHEET_URL as string;
 
     setIsSubmitting(true);
     try {
-      const [telegramRes] = await Promise.all([
-        fetch(TELEGRAM_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
-            parse_mode: "HTML",
-            text,
-          }),
+      const telegramRes = await fetch(TELEGRAM_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chat_id: TELEGRAM_CHAT_ID,
+          parse_mode: "HTML",
+          text,
         }),
-        fetch(GOOGLE_SHEET_URL, {
-          method: "POST",
-          mode: "no-cors",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify(sheetPayload),
-        }),
-      ]);
+      });
 
       const data = (await telegramRes.json()) as { ok?: boolean };
       if (!telegramRes.ok || !data.ok) {
         throw new Error("Telegram request failed");
+      }
+
+      // Google Apps Script: body must be a JSON *string*
+      if (sheetUrl) {
+        await fetch(sheetUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ name, phone, bouquet, price }),
+        });
       }
 
       setIsSuccess(true);
@@ -196,13 +198,13 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
               </DialogDescription>
             </DialogHeader>
 
-            {bouquet && (
+            {selectedBouquet && (
               <div className="mt-2 flex items-baseline justify-between gap-4 rounded-lg bg-muted/60 p-3 px-4">
                 <span className="text-sm font-light text-foreground">
-                  Авторский букет «{bouquet.name}»
+                  Авторский букет «{selectedBouquet.name}»
                 </span>
                 <Price
-                  value={bouquet.price}
+                  value={selectedBouquet.price}
                   className="whitespace-nowrap text-sm font-bold text-accent"
                 />
               </div>
@@ -218,7 +220,7 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
                   name="name"
                   type="text"
                   placeholder="Иван"
-                  value={name}
+                  value={nameValue}
                   onChange={handleNameChange}
                   className={`${inputCls}${nameError ? " border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
                 />
@@ -236,7 +238,7 @@ export function OrderModal({ open, onOpenChange, bouquet }: OrderModalProps) {
                   type="tel"
                   inputMode="numeric"
                   autoComplete="tel"
-                  value={phone}
+                  value={phoneDisplay}
                   onChange={handlePhoneChange}
                   placeholder="+7 (999) 000-00-00"
                   className={`${inputCls}${phoneError ? " border-red-500 focus:border-red-500 focus:ring-red-500" : ""}`}
