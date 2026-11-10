@@ -9,7 +9,7 @@ import { Header } from "@/components/site/Header";
 import { ProductCard } from "@/components/site/ProductCard";
 import { addToCart } from "@/lib/cart";
 import type { StorefrontProduct } from "@/lib/database.types";
-import { isCustomProduct, sortCustomFirst } from "@/lib/tenant-api";
+import { isCustomProduct, withCustomFirst } from "@/lib/tenant-api";
 import { useTenant } from "@/lib/tenant-context";
 import { cn } from "@/lib/utils";
 
@@ -39,16 +39,16 @@ function StoreHome() {
 
   const catalog = useMemo(() => {
     const popular = products.filter(
-      (p) => p.is_published === true && p.is_popular === true,
+      (p) => p.is_published === true && p.is_popular === true && !isCustomProduct(p),
     );
-    const custom = products.find(
+    const customFromDb = products.find(
       (p) => p.is_published === true && isCustomProduct(p),
     );
-    const withCustom =
-      custom && !popular.some((p) => p.id === custom.id) ? [...popular, custom] : popular;
-    return sortCustomFirst(withCustom);
-  }, [products]);
+    const base = customFromDb ? [customFromDb, ...popular] : popular;
+    return withCustomFirst(base, tenant);
+  }, [products, tenant]);
 
+  const dbEmpty = products.length === 0;
   const steps = (Array.isArray(tenant.steps) ? tenant.steps : []) as Step[];
 
   const onCustom = (p: StorefrontProduct) => {
@@ -119,6 +119,11 @@ function StoreHome() {
             );
           })}
         </div>
+        {dbEmpty ? (
+          <p className="mt-10 text-center font-light text-muted-foreground">
+            Товары пока не добавлены
+          </p>
+        ) : null}
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-20 lg:px-10">

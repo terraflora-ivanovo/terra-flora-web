@@ -308,7 +308,7 @@ function OwnerProducts() {
       <div className="space-y-3">
         <h1 className="font-display text-3xl font-light text-primary">Товары</h1>
         <p className="text-muted-foreground">
-          Подключите Supabase, чтобы редактировать каталог. Демо-товары сейчас читаются из business.json.
+          Подключите Supabase, чтобы редактировать каталог. Витрина показывает только товары из базы.
         </p>
       </div>
     );

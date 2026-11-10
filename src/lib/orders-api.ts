@@ -1,5 +1,6 @@
 import type { CartLine } from "@/lib/cart";
 import { trySupabase } from "@/lib/supabase";
+import { isLocalProductId } from "@/lib/tenant-api";
 
 export type CreateOrderInput = {
   tenantId: string;
@@ -45,7 +46,7 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   const items = input.lines.map((l) => ({
     tenant_id: input.tenantId,
     order_id: order.id,
-    product_id: l.productId.startsWith("demo-") ? null : l.productId,
+    product_id: isLocalProductId(l.productId) ? null : l.productId,
     product_name: l.name,
     unit_price_rub: l.isCustom ? 0 : l.priceRub,
     qty: l.qty,

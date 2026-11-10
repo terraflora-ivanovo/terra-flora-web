@@ -7,8 +7,9 @@ import { Header } from "@/components/site/Header";
 import { ProductCard } from "@/components/site/ProductCard";
 import { addToCart } from "@/lib/cart";
 import type { StorefrontProduct } from "@/lib/database.types";
-import { sortCustomFirst, visibleProducts } from "@/lib/tenant-api";
+import { isCustomProduct, visibleProducts, withCustomFirst } from "@/lib/tenant-api";
 import { useTenant } from "@/lib/tenant-context";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/s/$slug/catalog")({
   head: ({ params }) => ({
@@ -38,8 +39,10 @@ function CatalogPage() {
     const list = visibleProducts(products);
     const base =
       categoryId === "all" ? list : list.filter((p) => p.is_custom || p.category_id === categoryId);
-    return sortCustomFirst(base);
-  }, [products, categoryId]);
+    return withCustomFirst(base, tenant);
+  }, [products, categoryId, tenant]);
+
+  const dbEmpty = products.length === 0;
 
   const onCustom = (p: StorefrontProduct) => {
     addToCart(tenant.id, {
@@ -88,10 +91,25 @@ function CatalogPage() {
         </div>
 
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((p, i) => (
-            <ProductCard key={p.id} product={p} delayMs={i * 80} onCustomOrder={onCustom} />
-          ))}
+          {filtered.map((p, i) => {
+            const wide = isCustomProduct(p);
+            return (
+              <ProductCard
+                key={p.id}
+                product={p}
+                delayMs={i * 80}
+                onCustomOrder={onCustom}
+                wide={wide}
+                className={cn(wide && "sm:col-span-2")}
+              />
+            );
+          })}
         </div>
+        {dbEmpty ? (
+          <p className="mt-10 text-center font-light text-muted-foreground">
+            Товары пока не добавлены
+          </p>
+        ) : null}
       </main>
       <CheckoutModal open={customOpen} onOpenChange={setCustomOpen} mode="custom" />
       <Footer />

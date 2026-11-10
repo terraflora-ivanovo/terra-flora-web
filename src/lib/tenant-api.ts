@@ -1,5 +1,4 @@
 import type { Category, StorefrontProduct, Tenant } from "@/lib/database.types";
-import { demoImages } from "@/lib/demo-assets";
 import type { BusinessJson } from "@/lib/schemas";
 import { trySupabase } from "@/lib/supabase";
 import demoBusiness from "../../business/terra-flora/business.json";
@@ -11,13 +10,21 @@ export type TenantBundle = {
   categories: Category[];
 };
 
-function demoTenantBundle(slug: string): TenantBundle | null {
+const LOCAL_CUSTOM_ID = "local-custom";
+
+/** Fixed seed id used by terra-flora import/seed scripts. */
+const DEMO_TENANT_ID = "00000000-0000-4000-8000-000000000001";
+
+/**
+ * Shop metadata only (no products) when the tenants row is missing in Supabase.
+ * Products always come from the DB — never from business.json.
+ */
+function tenantMetaFromBusiness(slug: string): Tenant | null {
   const data = demoBusiness as BusinessJson;
   if (data.slug !== slug) return null;
 
-  const tenantId = "00000000-0000-4000-8000-000000000001";
-  const tenant: Tenant = {
-    id: tenantId,
+  return {
+    id: DEMO_TENANT_ID,
     slug: data.slug,
     name: data.name,
     city: data.city,
@@ -31,48 +38,6 @@ function demoTenantBundle(slug: string): TenantBundle | null {
     owner_user_id: null,
     created_at: new Date().toISOString(),
   };
-
-  const categoriesAll: Category[] = data.categories.map((c, i) => ({
-    id: `demo-cat-${c.slug}`,
-    tenant_id: tenantId,
-    name: c.name,
-    slug: c.slug,
-    sort_order: c.sortOrder ?? i,
-  }));
-  const catBySlug = Object.fromEntries(categoriesAll.map((c) => [c.slug, c]));
-
-  const tagBySlug = Object.fromEntries(data.tags.map((t, i) => [t.slug, { id: `tag-${i}`, ...t }]));
-
-  const products: StorefrontProduct[] = data.products.map((p, i) => ({
-    id: `demo-product-${i}`,
-    tenant_id: tenantId,
-    category_id: p.categorySlug ? (catBySlug[p.categorySlug]?.id ?? null) : null,
-    name: p.name,
-    slug: p.slug,
-    description: p.description,
-    price_rub: p.priceRub,
-    image_path: demoImages[p.image] ?? p.image,
-    is_custom: p.isCustom,
-    in_stock: p.inStock,
-    is_published: p.isPublished,
-    is_popular: p.isPopular ?? false,
-    sort_order: p.sortOrder,
-    created_at: tenant.created_at,
-    updated_at: tenant.created_at,
-    tags: p.tagSlugs
-      .map((s) => tagBySlug[s])
-      .filter(Boolean)
-      .map((t) => ({ id: t.id, name: t.name, slug: t.slug })),
-  }));
-
-  const publishedCategoryIds = new Set(
-    products.filter((p) => p.is_published).map((p) => p.category_id).filter(Boolean),
-  );
-  const categories = categoriesAll
-    .filter((c) => publishedCategoryIds.has(c.id))
-    .sort((a, b) => a.sort_order - b.sort_order);
-
-  return { tenant, products, categories };
 }
 
 /** Категории тенанта, в которых есть хотя бы один опубликованный товар. */
@@ -110,16 +75,27 @@ export async function loadPublishedCategories(tenantId: string): Promise<Categor
 }
 
 /**
- * Loads tenant, published products, and non-empty categories by slug.
- * Falls back to bundled `business.json` demo data when Supabase is unavailable.
+ * Loads tenant + published products from Supabase.
+ * Never injects mock catalog products — only real DB rows.
+ * If the tenants row is missing, uses business.json for shop metadata only.
  */
 export async function loadTenantBySlug(slug: string): Promise<TenantBundle | null> {
   const sb = trySupabase();
-  if (!sb) return demoTenantBundle(slug);
+  if (!sb) {
+    const tenant = tenantMetaFromBusiness(slug);
+    if (!tenant) return null;
+    return { tenant, products: [], categories: [] };
+  }
 
-  const { data: tenant, error } = await sb.from("tenants").select("*").eq("slug", slug).maybeSingle();
+  const { data: tenantRow, error } = await sb
+    .from("tenants")
+    .select("*")
+    .eq("slug", slug)
+    .maybeSingle();
   if (error) throw error;
-  if (!tenant) return demoTenantBundle(slug);
+
+  const tenant = tenantRow ?? tenantMetaFromBusiness(slug);
+  if (!tenant) return null;
 
   const [{ data: products, error: pErr }, categories] = await Promise.all([
     sb
@@ -153,6 +129,29 @@ export function isCustomProduct(p: StorefrontProduct): boolean {
   return p.is_custom || p.name === "Индивидуальный букет";
 }
 
+/** Synthetic card used when the DB has no `is_custom` product yet. */
+export function makeLocalCustomProduct(tenant: Tenant): StorefrontProduct {
+  const now = new Date().toISOString();
+  return {
+    id: LOCAL_CUSTOM_ID,
+    tenant_id: tenant.id,
+    category_id: null,
+    name: "Индивидуальный букет",
+    slug: "individualnyy-buket",
+    description: "Оставьте контакты. Бюджет и состав обсудим по телефону.",
+    price_rub: 0,
+    image_path: tenant.hero_image_path,
+    is_custom: true,
+    in_stock: true,
+    is_published: true,
+    is_popular: true,
+    sort_order: -1,
+    created_at: now,
+    updated_at: now,
+    tags: [],
+  };
+}
+
 /**
  * Sorts products with the individual bouquet first (index 0),
  * then by `sort_order` ascending.
@@ -167,6 +166,19 @@ export function sortCustomFirst(products: StorefrontProduct[]): StorefrontProduc
 }
 
 /**
+ * Always returns a list with the custom card first.
+ * Injects a local custom product when none exists in the DB.
+ */
+export function withCustomFirst(
+  products: StorefrontProduct[],
+  tenant: Tenant,
+): StorefrontProduct[] {
+  const existing = products.find(isCustomProduct);
+  if (existing) return sortCustomFirst(products);
+  return [makeLocalCustomProduct(tenant), ...products];
+}
+
+/**
  * Published products that are either custom or in stock,
  * sorted with the individual bouquet first.
  */
@@ -174,4 +186,9 @@ export function visibleProducts(products: StorefrontProduct[]): StorefrontProduc
   return sortCustomFirst(
     products.filter((p) => p.is_published && (p.is_custom || p.in_stock)),
   );
+}
+
+/** True when product_id is not a real DB uuid (local/demo placeholder). */
+export function isLocalProductId(id: string): boolean {
+  return id === LOCAL_CUSTOM_ID || id.startsWith("demo-") || id.startsWith("local-");
 }
