@@ -1,0 +1,93 @@
+{
+  "slug": "terra-flora",
+  "name": "terra flora",
+  "city": "Иваново",
+  "phone": "+7 980 689 41 20",
+  "address": "ул. Котовского, д. 23",
+  "tagline": "Цветы это поэзия, которую природа написала для нас",
+  "about": "Мы собираем авторские букеты вручную из свежих сезонных цветов. Работаем бережно, без спешки и лишнего шума.",
+  "heroImage": "hero.jpg",
+  "steps": [
+    {
+      "n": "01",
+      "title": "Выбираете букет",
+      "text": "Из каталога или по вашему пожеланию, подскажем с выбором."
+    },
+    {
+      "n": "02",
+      "title": "Собираем вручную",
+      "text": "Флорист собирает букет из свежих сезонных цветов."
+    },
+    {
+      "n": "03",
+      "title": "Выдаем в срок",
+      "text": "Отдаем бережно и точно ко времени."
+    }
+  ],
+  "categories": [
+    { "slug": "avtorskie", "name": "Авторские", "sortOrder": 0 },
+    { "slug": "individualnye", "name": "Индивидуальные", "sortOrder": 1 }
+  ],
+  "tags": [
+    { "slug": "popular", "name": "Популярное" },
+    { "slug": "season", "name": "Сезонное" }
+  ],
+  "products": [
+    {
+      "slug": "utrenniy-sad",
+      "name": "Утренний сад",
+      "description": "Свежий сбор с мягкими оттенками.",
+      "priceRub": 4900,
+      "image": "b1.jpg",
+      "categorySlug": "avtorskie",
+      "tagSlugs": ["popular"],
+      "inStock": true,
+      "isPublished": true,
+      "isPopular": true,
+      "isCustom": false,
+      "sortOrder": 0
+    },
+    {
+      "slug": "pionovyy-shepot",
+      "name": "Пионовый шёпот",
+      "description": "Пионы и тихая романтика в одном букете.",
+      "priceRub": 6200,
+      "image": "b2.jpg",
+      "categorySlug": "avtorskie",
+      "tagSlugs": ["popular", "season"],
+      "inStock": true,
+      "isPublished": true,
+      "isPopular": true,
+      "isCustom": false,
+      "sortOrder": 1
+    },
+    {
+      "slug": "lesnoy-svet",
+      "name": "Лесной свет",
+      "description": "Зелень и воздух лесной прогулки.",
+      "priceRub": 5400,
+      "image": "b3.jpg",
+      "categorySlug": "avtorskie",
+      "tagSlugs": ["season"],
+      "inStock": true,
+      "isPublished": true,
+      "isPopular": false,
+      "isCustom": false,
+      "sortOrder": 2
+    },
+    {
+      "slug": "individualnyy-buket",
+      "name": "Индивидуальный букет",
+      "description": "Оставьте контакты. Бюджет и состав обсудим по телефону.",
+      "priceRub": 0,
+      "image": "hero.jpg",
+      "categorySlug": "individualnye",
+      "tagSlugs": [],
+      "inStock": true,
+      "isPublished": true,
+      "isPopular": true,
+      "isCustom": true,
+      "sortOrder": 100
+    }
+  ]
+}

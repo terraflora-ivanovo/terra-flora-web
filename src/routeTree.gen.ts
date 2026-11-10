@@ -15,6 +15,18 @@ import { Route as CatalogRouteImport } from './routes/catalog'
 import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as OfferRouteImport } from './routes/offer'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SSlugRouteImport } from './routes/s.$slug'
+import { Route as SSlugIndexRouteImport } from './routes/s.$slug.index'
+import { Route as SSlugAboutRouteImport } from './routes/s.$slug.about'
+import { Route as SSlugCartRouteImport } from './routes/s.$slug.cart'
+import { Route as SSlugCatalogRouteImport } from './routes/s.$slug.catalog'
+import { Route as SSlugContactsRouteImport } from './routes/s.$slug.contacts'
+import { Route as SSlugOfferRouteImport } from './routes/s.$slug.offer'
+import { Route as SSlugOwnerRouteImport } from './routes/s.$slug.owner'
+import { Route as SSlugPrivacyRouteImport } from './routes/s.$slug.privacy'
+import { Route as SSlugOwnerIndexRouteImport } from './routes/s.$slug.owner.index'
+import { Route as SSlugOwnerLoginRouteImport } from './routes/s.$slug.owner.login'
+import { Route as SSlugOwnerProductsRouteImport } from './routes/s.$slug.owner.products'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +58,66 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SSlugRoute = SSlugRouteImport.update({
+  id: '/s/$slug',
+  path: '/s/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SSlugIndexRoute = SSlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugAboutRoute = SSlugAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugCartRoute = SSlugCartRouteImport.update({
+  id: '/cart',
+  path: '/cart',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugCatalogRoute = SSlugCatalogRouteImport.update({
+  id: '/catalog',
+  path: '/catalog',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugContactsRoute = SSlugContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugOfferRoute = SSlugOfferRouteImport.update({
+  id: '/offer',
+  path: '/offer',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugOwnerRoute = SSlugOwnerRouteImport.update({
+  id: '/owner',
+  path: '/owner',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugPrivacyRoute = SSlugPrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => SSlugRoute,
+} as any)
+const SSlugOwnerIndexRoute = SSlugOwnerIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SSlugOwnerRoute,
+} as any)
+const SSlugOwnerLoginRoute = SSlugOwnerLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => SSlugOwnerRoute,
+} as any)
+const SSlugOwnerProductsRoute = SSlugOwnerProductsRouteImport.update({
+  id: '/products',
+  path: '/products',
+  getParentRoute: () => SSlugOwnerRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +126,18 @@ export interface FileRoutesByFullPath {
   '/contacts': typeof ContactsRoute
   '/offer': typeof OfferRoute
   '/privacy': typeof PrivacyRoute
+  '/s/$slug': typeof SSlugRouteWithChildren
+  '/s/$slug/about': typeof SSlugAboutRoute
+  '/s/$slug/cart': typeof SSlugCartRoute
+  '/s/$slug/catalog': typeof SSlugCatalogRoute
+  '/s/$slug/contacts': typeof SSlugContactsRoute
+  '/s/$slug/offer': typeof SSlugOfferRoute
+  '/s/$slug/owner': typeof SSlugOwnerRouteWithChildren
+  '/s/$slug/privacy': typeof SSlugPrivacyRoute
+  '/s/$slug/': typeof SSlugIndexRoute
+  '/s/$slug/owner/login': typeof SSlugOwnerLoginRoute
+  '/s/$slug/owner/products': typeof SSlugOwnerProductsRoute
+  '/s/$slug/owner/': typeof SSlugOwnerIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -62,6 +146,16 @@ export interface FileRoutesByTo {
   '/contacts': typeof ContactsRoute
   '/offer': typeof OfferRoute
   '/privacy': typeof PrivacyRoute
+  '/s/$slug/about': typeof SSlugAboutRoute
+  '/s/$slug/cart': typeof SSlugCartRoute
+  '/s/$slug/catalog': typeof SSlugCatalogRoute
+  '/s/$slug/contacts': typeof SSlugContactsRoute
+  '/s/$slug/offer': typeof SSlugOfferRoute
+  '/s/$slug/privacy': typeof SSlugPrivacyRoute
+  '/s/$slug': typeof SSlugIndexRoute
+  '/s/$slug/owner/login': typeof SSlugOwnerLoginRoute
+  '/s/$slug/owner/products': typeof SSlugOwnerProductsRoute
+  '/s/$slug/owner': typeof SSlugOwnerIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -71,12 +165,58 @@ export interface FileRoutesById {
   '/contacts': typeof ContactsRoute
   '/offer': typeof OfferRoute
   '/privacy': typeof PrivacyRoute
+  '/s/$slug': typeof SSlugRouteWithChildren
+  '/s/$slug/about': typeof SSlugAboutRoute
+  '/s/$slug/cart': typeof SSlugCartRoute
+  '/s/$slug/catalog': typeof SSlugCatalogRoute
+  '/s/$slug/contacts': typeof SSlugContactsRoute
+  '/s/$slug/offer': typeof SSlugOfferRoute
+  '/s/$slug/owner': typeof SSlugOwnerRouteWithChildren
+  '/s/$slug/privacy': typeof SSlugPrivacyRoute
+  '/s/$slug/': typeof SSlugIndexRoute
+  '/s/$slug/owner/login': typeof SSlugOwnerLoginRoute
+  '/s/$slug/owner/products': typeof SSlugOwnerProductsRoute
+  '/s/$slug/owner/': typeof SSlugOwnerIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/catalog' | '/contacts' | '/offer' | '/privacy'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/contacts'
+    | '/offer'
+    | '/privacy'
+    | '/s/$slug'
+    | '/s/$slug/about'
+    | '/s/$slug/cart'
+    | '/s/$slug/catalog'
+    | '/s/$slug/contacts'
+    | '/s/$slug/offer'
+    | '/s/$slug/owner'
+    | '/s/$slug/privacy'
+    | '/s/$slug/'
+    | '/s/$slug/owner/login'
+    | '/s/$slug/owner/products'
+    | '/s/$slug/owner/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/catalog' | '/contacts' | '/offer' | '/privacy'
+  to:
+    | '/'
+    | '/about'
+    | '/catalog'
+    | '/contacts'
+    | '/offer'
+    | '/privacy'
+    | '/s/$slug/about'
+    | '/s/$slug/cart'
+    | '/s/$slug/catalog'
+    | '/s/$slug/contacts'
+    | '/s/$slug/offer'
+    | '/s/$slug/privacy'
+    | '/s/$slug'
+    | '/s/$slug/owner/login'
+    | '/s/$slug/owner/products'
+    | '/s/$slug/owner'
   id:
     | '__root__'
     | '/'
@@ -85,6 +225,18 @@ export interface FileRouteTypes {
     | '/contacts'
     | '/offer'
     | '/privacy'
+    | '/s/$slug'
+    | '/s/$slug/about'
+    | '/s/$slug/cart'
+    | '/s/$slug/catalog'
+    | '/s/$slug/contacts'
+    | '/s/$slug/offer'
+    | '/s/$slug/owner'
+    | '/s/$slug/privacy'
+    | '/s/$slug/'
+    | '/s/$slug/owner/login'
+    | '/s/$slug/owner/products'
+    | '/s/$slug/owner/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,6 +246,7 @@ export interface RootRouteChildren {
   ContactsRoute: typeof ContactsRoute
   OfferRoute: typeof OfferRoute
   PrivacyRoute: typeof PrivacyRoute
+  SSlugRoute: typeof SSlugRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -140,8 +293,132 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/s/$slug': {
+      id: '/s/$slug'
+      path: '/s/$slug'
+      fullPath: '/s/$slug'
+      preLoaderRoute: typeof SSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/s/$slug/': {
+      id: '/s/$slug/'
+      path: '/'
+      fullPath: '/s/$slug/'
+      preLoaderRoute: typeof SSlugIndexRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/about': {
+      id: '/s/$slug/about'
+      path: '/about'
+      fullPath: '/s/$slug/about'
+      preLoaderRoute: typeof SSlugAboutRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/cart': {
+      id: '/s/$slug/cart'
+      path: '/cart'
+      fullPath: '/s/$slug/cart'
+      preLoaderRoute: typeof SSlugCartRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/catalog': {
+      id: '/s/$slug/catalog'
+      path: '/catalog'
+      fullPath: '/s/$slug/catalog'
+      preLoaderRoute: typeof SSlugCatalogRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/contacts': {
+      id: '/s/$slug/contacts'
+      path: '/contacts'
+      fullPath: '/s/$slug/contacts'
+      preLoaderRoute: typeof SSlugContactsRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/offer': {
+      id: '/s/$slug/offer'
+      path: '/offer'
+      fullPath: '/s/$slug/offer'
+      preLoaderRoute: typeof SSlugOfferRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/owner': {
+      id: '/s/$slug/owner'
+      path: '/owner'
+      fullPath: '/s/$slug/owner'
+      preLoaderRoute: typeof SSlugOwnerRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/privacy': {
+      id: '/s/$slug/privacy'
+      path: '/privacy'
+      fullPath: '/s/$slug/privacy'
+      preLoaderRoute: typeof SSlugPrivacyRouteImport
+      parentRoute: typeof SSlugRoute
+    }
+    '/s/$slug/owner/': {
+      id: '/s/$slug/owner/'
+      path: '/'
+      fullPath: '/s/$slug/owner/'
+      preLoaderRoute: typeof SSlugOwnerIndexRouteImport
+      parentRoute: typeof SSlugOwnerRoute
+    }
+    '/s/$slug/owner/login': {
+      id: '/s/$slug/owner/login'
+      path: '/login'
+      fullPath: '/s/$slug/owner/login'
+      preLoaderRoute: typeof SSlugOwnerLoginRouteImport
+      parentRoute: typeof SSlugOwnerRoute
+    }
+    '/s/$slug/owner/products': {
+      id: '/s/$slug/owner/products'
+      path: '/products'
+      fullPath: '/s/$slug/owner/products'
+      preLoaderRoute: typeof SSlugOwnerProductsRouteImport
+      parentRoute: typeof SSlugOwnerRoute
+    }
   }
 }
+
+interface SSlugOwnerRouteChildren {
+  SSlugOwnerLoginRoute: typeof SSlugOwnerLoginRoute
+  SSlugOwnerProductsRoute: typeof SSlugOwnerProductsRoute
+  SSlugOwnerIndexRoute: typeof SSlugOwnerIndexRoute
+}
+
+const SSlugOwnerRouteChildren: SSlugOwnerRouteChildren = {
+  SSlugOwnerLoginRoute: SSlugOwnerLoginRoute,
+  SSlugOwnerProductsRoute: SSlugOwnerProductsRoute,
+  SSlugOwnerIndexRoute: SSlugOwnerIndexRoute,
+}
+
+const SSlugOwnerRouteWithChildren = SSlugOwnerRoute._addFileChildren(
+  SSlugOwnerRouteChildren,
+)
+
+interface SSlugRouteChildren {
+  SSlugAboutRoute: typeof SSlugAboutRoute
+  SSlugCartRoute: typeof SSlugCartRoute
+  SSlugCatalogRoute: typeof SSlugCatalogRoute
+  SSlugContactsRoute: typeof SSlugContactsRoute
+  SSlugOfferRoute: typeof SSlugOfferRoute
+  SSlugOwnerRoute: typeof SSlugOwnerRouteWithChildren
+  SSlugPrivacyRoute: typeof SSlugPrivacyRoute
+  SSlugIndexRoute: typeof SSlugIndexRoute
+}
+
+const SSlugRouteChildren: SSlugRouteChildren = {
+  SSlugAboutRoute: SSlugAboutRoute,
+  SSlugCartRoute: SSlugCartRoute,
+  SSlugCatalogRoute: SSlugCatalogRoute,
+  SSlugContactsRoute: SSlugContactsRoute,
+  SSlugOfferRoute: SSlugOfferRoute,
+  SSlugOwnerRoute: SSlugOwnerRouteWithChildren,
+  SSlugPrivacyRoute: SSlugPrivacyRoute,
+  SSlugIndexRoute: SSlugIndexRoute,
+}
+
+const SSlugRouteWithChildren = SSlugRoute._addFileChildren(SSlugRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -150,6 +427,7 @@ const rootRouteChildren: RootRouteChildren = {
   ContactsRoute: ContactsRoute,
   OfferRoute: OfferRoute,
   PrivacyRoute: PrivacyRoute,
+  SSlugRoute: SSlugRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
