@@ -76,13 +76,12 @@ function OwnerProducts() {
   const [formError, setFormError] = useState<string | null>(null);
 
   const productsQuery = useQuery({
-    queryKey: ["owner-products", tenant.id],
+    queryKey: ["owner-products"],
     queryFn: async () => {
       if (!sb) return [];
       const { data, error } = await sb
         .from("products")
         .select("*")
-        .eq("tenant_id", tenant.id)
         .order("sort_order", { ascending: true });
       if (error) throw error;
       return data ?? [];
@@ -178,7 +177,6 @@ function OwnerProducts() {
       const { data, error } = await sb
         .from("products")
         .select("id")
-        .eq("tenant_id", tenant.id)
         .eq("slug", candidate)
         .maybeSingle();
       if (error) throw error;
@@ -234,14 +232,14 @@ function OwnerProducts() {
           price_rub: priceRub,
           category_id: categoryId,
           image_path: imagePath,
+          tenant_id: editing.tenant_id ?? tenant.id,
         })
-        .eq("id", editing.id)
-        .eq("tenant_id", tenant.id);
+        .eq("id", editing.id);
       if (error) throw error;
     },
     onSuccess: async () => {
       await Promise.all([
-        qc.invalidateQueries({ queryKey: ["owner-products", tenant.id] }),
+        qc.invalidateQueries({ queryKey: ["owner-products"] }),
         qc.invalidateQueries({ queryKey: ["owner-categories", tenant.id] }),
       ]);
       setEditorOpen(false);
@@ -252,11 +250,11 @@ function OwnerProducts() {
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
       if (!sb) throw new Error("Supabase не настроен");
-      const { error } = await sb.from("products").delete().eq("id", id).eq("tenant_id", tenant.id);
+      const { error } = await sb.from("products").delete().eq("id", id);
       if (error) throw error;
     },
     onSuccess: async () => {
-      await qc.invalidateQueries({ queryKey: ["owner-products", tenant.id] });
+      await qc.invalidateQueries({ queryKey: ["owner-products"] });
       setEditorOpen(false);
     },
     onError: (err: Error) => setFormError(err.message || "Не удалось удалить"),
@@ -272,22 +270,21 @@ function OwnerProducts() {
       const { error } = await sb
         .from("products")
         .update({ [payload.field]: payload.value })
-        .eq("id", payload.id)
-        .eq("tenant_id", tenant.id);
+        .eq("id", payload.id);
       if (error) throw error;
     },
     onMutate: async (payload) => {
-      await qc.cancelQueries({ queryKey: ["owner-products", tenant.id] });
-      const prev = qc.getQueryData<Product[]>(["owner-products", tenant.id]);
-      qc.setQueryData<Product[]>(["owner-products", tenant.id], (list) =>
+      await qc.cancelQueries({ queryKey: ["owner-products"] });
+      const prev = qc.getQueryData<Product[]>(["owner-products"]);
+      qc.setQueryData<Product[]>(["owner-products"], (list) =>
         (list ?? []).map((p) => (p.id === payload.id ? { ...p, [payload.field]: payload.value } : p)),
       );
       return { prev };
     },
     onError: (_err, _payload, ctx) => {
-      if (ctx?.prev) qc.setQueryData(["owner-products", tenant.id], ctx.prev);
+      if (ctx?.prev) qc.setQueryData(["owner-products"], ctx.prev);
     },
-    onSettled: () => qc.invalidateQueries({ queryKey: ["owner-products", tenant.id] }),
+    onSettled: () => qc.invalidateQueries({ queryKey: ["owner-products"] }),
   });
 
   const onSubmit = (e: FormEvent) => {
