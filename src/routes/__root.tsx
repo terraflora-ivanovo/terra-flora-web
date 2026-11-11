@@ -79,19 +79,19 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "Terra Flora — Авторские букеты в Иванове" },
+      { title: "Terra Flora — Авторские букеты в Иваново" },
       {
         name: "description",
         content:
-          "Цветочная мастерская в Иванове. Свежие авторские букеты с душой. Быстрый заказ в один клик.",
+          "Цветочная мастерская в Иваново. Свежие авторские букеты с душой. Быстрый заказ в один клик.",
       },
       { name: "author", content: "Lovable" },
       { name: "theme-color", content: "#FFF6F6" },
-      { property: "og:title", content: "Terra Flora — Авторские букеты в Иванове" },
+      { property: "og:title", content: "Terra Flora — Авторские букеты в Иваново" },
       {
         property: "og:description",
         content:
-          "Цветочная мастерская в Иванове. Свежие авторские букеты с душой. Быстрый заказ в один клик.",
+          "Цветочная мастерская в Иваново. Свежие авторские букеты с душой. Быстрый заказ в один клик.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/og-image.jpg" },
@@ -127,6 +127,16 @@ function RootShell({ children }: { children: ReactNode }) {
       <body>
         {children}
         <Scripts />
+        <script
+  dangerouslySetInnerHTML={{
+    __html: `
+      window.addEventListener('load', function() {
+        const badge = document.querySelector('#netlify-badge') || document.querySelector('.netlify-badge');
+        if (badge) badge.remove();
+      });
+    `
+  }}
+/>
       </body>
     </html>
   );
