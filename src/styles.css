@@ -170,3 +170,8 @@ body { background-image: var(--gradient-soft); background-attachment: fixed; fon
 }
 @keyframes fade-in-up { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
 @utility animate-fade-up { animation: fade-in-up .9s cubic-bezier(.2,.7,.2,1) both; }
+#netlify-badge, 
+.netlify-badge,
+a[href*="netlify.com/badge"] {
+    display: none !important;
+}
