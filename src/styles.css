@@ -175,3 +175,11 @@ body { background-image: var(--gradient-soft); background-attachment: fixed; fon
 a[href*="netlify.com/badge"] {
     display: none !important;
 }
+div[id*="netlify"], 
+iframe[src*="netlify"],
+.netlify-badge {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+}
