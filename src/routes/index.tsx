@@ -10,3 +10,8 @@ export const Route = createFileRoute("/")({
     });
   },
 });
+#netlify-badge, 
+.netlify-badge,
+a[href*="netlify.com/badge"] {
+    display: none !important;
+}
