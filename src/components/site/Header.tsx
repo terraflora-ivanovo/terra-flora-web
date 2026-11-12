@@ -61,7 +61,7 @@ export function Header() {
   const phoneHref = `tel:${tenant.phone.replace(/\s+/g, "")}`;
 
   return (
-    <header className="mx-auto flex max-w-7xl items-center justify-between gap-6 border-b border-border px-6 py-6 lg:px-10">
+    <header className="flex w-full items-center justify-between border-b border-border px-6 py-6 md:px-12">
       <Link
         to="/s/$slug"
         params={routeParams}

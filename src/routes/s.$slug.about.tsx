@@ -14,7 +14,7 @@ export const Route = createFileRoute("/s/$slug/about")({
 function AboutPage() {
   const { tenant } = useTenant();
   return (
-    <div className="flex min-h-screen flex-1 flex-col text-foreground">
+    <div className="flex min-h-screen w-full flex-1 flex-col bg-background text-foreground">
       <Header />
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 pb-20 pt-14 lg:px-10">
         <h1 className="mb-10 font-display text-4xl font-light text-primary sm:text-5xl">О нас</h1>
