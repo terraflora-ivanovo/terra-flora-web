@@ -85,7 +85,7 @@ export function Footer() {
   );
 
   return (
-    <footer className="mt-20 bg-primary pb-[calc(3.5rem+env(safe-area-inset-bottom))] text-primary-foreground">
+    <footer className="mt-auto bg-primary pb-[calc(3.5rem+env(safe-area-inset-bottom))] text-primary-foreground">
       <div className="mx-auto flex max-w-7xl flex-col items-start gap-8 px-6 pt-14 text-left md:hidden lg:px-10">
         <Logo
           name={tenant.name}

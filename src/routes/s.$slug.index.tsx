@@ -63,7 +63,7 @@ function StoreHome() {
   };
 
   return (
-    <div className="min-h-[100dvh] text-foreground">
+    <div className="flex min-h-screen flex-1 flex-col text-foreground">
       <Header />
 
       <section className="mx-auto grid max-w-7xl items-start gap-12 px-6 pb-20 pt-8 md:pt-40 lg:grid-cols-12 lg:px-10 lg:pt-50">

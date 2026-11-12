@@ -25,7 +25,7 @@ function CartPage() {
   const total = cartTotalRub(tenant.id);
 
   return (
-    <div className="flex min-h-[100dvh] flex-col text-foreground">
+    <div className="flex min-h-screen flex-1 flex-col text-foreground">
       <Header />
       <main className="mx-auto w-full max-w-3xl flex-1 px-6 pb-20 pt-14 lg:px-10">
         <h1 className="font-display text-4xl font-light text-primary sm:text-5xl">Корзина</h1>

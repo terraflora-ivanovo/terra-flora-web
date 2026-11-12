@@ -30,7 +30,7 @@ function OwnerLayout() {
   };
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-background text-foreground">
+    <div className="flex min-h-screen flex-1 flex-col bg-background text-foreground">
       {!isLogin ? (
         <header className="border-b border-border px-6 py-5 lg:px-10">
           <div className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-4">

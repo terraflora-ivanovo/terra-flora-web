@@ -56,9 +56,9 @@ function CatalogPage() {
   };
 
   return (
-    <div className="min-h-[100dvh] text-foreground">
+    <div className="flex min-h-screen flex-1 flex-col text-foreground">
       <Header />
-      <main className="mx-auto max-w-7xl px-6 pb-20 pt-14 lg:px-10">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-6 pb-20 pt-14 lg:px-10">
         <nav className="text-sm text-muted-foreground">
           <Link to="/s/$slug" params={{ slug }} className="transition-colors hover:text-primary">
             Главная

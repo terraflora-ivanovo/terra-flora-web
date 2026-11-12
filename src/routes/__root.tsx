@@ -124,7 +124,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      <body className="flex min-h-screen flex-col">
         {children}
         <Scripts />
         <script
@@ -147,7 +147,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <div className="flex min-h-[100dvh] flex-col">
+      <div className="flex min-h-screen flex-1 flex-col">
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <main className="flex flex-1 flex-col">
           <Outlet />
