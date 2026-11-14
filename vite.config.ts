@@ -8,6 +8,7 @@ export default defineConfig({
     server: { entry: "server" },
   },
   vite: {
+    base: '/', //
     plugins: [
       VitePWA({
         strategies: "injectManifest",
