@@ -19,7 +19,11 @@ export function getSupabase(): SupabaseClient<Database> {
     );
   }
   if (!client) {
-    client = createClient<Database>(url!, anonKey!.trim(), {
+    // Безопасно очищаем ключи от невидимых пробелов отдельными переменными
+    const cleanUrl = url!.trim();
+    const cleanKey = anonKey!.trim();
+
+    client = createClient<Database>(cleanUrl, cleanKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
