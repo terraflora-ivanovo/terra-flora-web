@@ -28,24 +28,23 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
     return { orderId: `demo-${Date.now()}`, mode: "demo" };
   }
 
-  const { data: order, error } = await sb
-    .from("orders")
-    .insert({
-      tenant_id: input.tenantId,
-      customer_name: input.customerName,
-      customer_phone: input.customerPhone,
-      comment: input.comment ?? null,
-      is_custom_request: isCustomRequest || input.lines.some((l) => l.isCustom),
-      status: "new",
-    })
-    .select("id")
-    .single();
+  const orderId = crypto.randomUUID();
 
-  if (error || !order) throw error ?? new Error("Не удалось создать заказ");
+  const { error } = await sb.from("orders").insert({
+    id: orderId,
+    tenant_id: input.tenantId,
+    customer_name: input.customerName,
+    customer_phone: input.customerPhone,
+    comment: input.comment ?? null,
+    is_custom_request: isCustomRequest || input.lines.some((l) => l.isCustom),
+    status: "new",
+  });
+
+  if (error) throw error;
 
   const items = input.lines.map((l) => ({
     tenant_id: input.tenantId,
-    order_id: order.id,
+    order_id: orderId,
     product_id: isLocalProductId(l.productId) ? null : l.productId,
     product_name: l.name,
     unit_price_rub: l.isCustom ? 0 : l.priceRub,
@@ -55,5 +54,5 @@ export async function createOrder(input: CreateOrderInput): Promise<CreateOrderR
   const { error: itemsError } = await sb.from("order_items").insert(items);
   if (itemsError) throw itemsError;
 
-  return { orderId: order.id, mode: "supabase" };
+  return { orderId, mode: "supabase" };
 }

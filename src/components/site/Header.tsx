@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { Menu, ShoppingBag } from "lucide-react";
 
@@ -50,6 +50,7 @@ const mobileLinks = [
 ] as const;
 
 export function Header() {
+  const [isMounted, setIsMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const { slug, tenant } = useTenant();
   const cart = useCart(tenant.id);
@@ -59,6 +60,12 @@ export function Header() {
   );
   const routeParams = useMemo(() => ({ slug }), [slug]);
   const phoneHref = `tel:${tenant.phone.replace(/\s+/g, "")}`;
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <header className="flex w-full items-center justify-between border-b border-border px-6 py-6 md:px-12">

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
 import { CheckoutModal } from "@/components/site/CheckoutModal";
@@ -19,10 +19,17 @@ const btn =
   "inline-flex items-center justify-center gap-2 rounded-full bg-primary font-medium text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift";
 
 function CartPage() {
+  const [isMounted, setIsMounted] = useState(false);
   const { slug, tenant } = useTenant();
   const cart = useCart(tenant.id);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const total = cartTotalRub(tenant.id);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) return null;
 
   return (
     <div className="flex min-h-screen flex-1 flex-col text-foreground">
