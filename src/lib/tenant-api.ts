@@ -13,7 +13,7 @@ export type TenantBundle = {
 const LOCAL_CUSTOM_ID = "local-custom";
 
 /** Fixed seed id used by terra-flora import/seed scripts. */
-const DEMO_TENANT_ID = "00000000-0000-4000-8000-000000000001";
+const DEMO_TENANT_ID = "d388bd0e-8256-4dd8-8a65-eb3293f54046";
 
 /**
  * Shop metadata only (no products) when the tenants row is missing in Supabase.
