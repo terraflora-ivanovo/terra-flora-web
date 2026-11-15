@@ -19,7 +19,7 @@ export function getSupabase(): SupabaseClient<Database> {
     );
   }
   if (!client) {
-    client = createClient<Database>(url!, anonKey!, {
+    client = createClient<Database>(url!, anonKey!.trim(), {
       auth: {
         persistSession: true,
         autoRefreshToken: true,
