@@ -12,7 +12,8 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "import:business": "node scripts/import-business.mjs"
+    "import:business": "node scripts/import-business.mjs",
+    "start": "node .output/server/index.mjs"
   },
   "overrides": {
     "rolldown": "1.2.1"
