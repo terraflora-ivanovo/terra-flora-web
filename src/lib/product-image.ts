@@ -36,28 +36,19 @@ export function publicImageUrl(path: string | null | undefined): string | null {
   return `${base}/storage/v1/object/public/${PRODUCT_IMAGES_BUCKET}/${path}`;
 }
 
-function extFromFile(file: File): string {
-  const fromName = file.name.split(".").pop()?.toLowerCase();
-  if (fromName && /^[a-z0-9]+$/.test(fromName)) return fromName;
-  if (file.type === "image/png") return "png";
-  if (file.type === "image/webp") return "webp";
-  if (file.type === "image/gif") return "gif";
-  return "jpg";
-}
-
 /**
- * Uploads a product photo to the `product-images` bucket.
- * @returns Storage object path `{tenantSlug}/{uuid}.{ext}`.
+ * Uploads a product photo to the `product-images` bucket as WebP.
+ * @returns Storage object path `{tenantSlug}/{uuid}.webp`.
  */
 export async function uploadProductImage(
   sb: SupabaseClient<Database>,
   tenantSlug: string,
   file: File,
 ): Promise<string> {
-  const path = `${tenantSlug}/${crypto.randomUUID()}.${extFromFile(file)}`;
+  const path = `${tenantSlug}/${crypto.randomUUID()}.webp`;
   const { error } = await sb.storage.from(PRODUCT_IMAGES_BUCKET).upload(path, file, {
     upsert: false,
-    contentType: file.type || "image/jpeg",
+    contentType: "image/webp",
     cacheControl: "3600",
   });
   if (error) throw error;

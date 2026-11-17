@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type ChangeEvent, type FormEvent } from "
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute } from "@tanstack/react-router";
 import { Plus, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { Category, Product } from "@/lib/database.types";
+import { optimizeImageToWebp } from "@/lib/image-optimizer";
 import { formatPriceRub, publicImageUrl, uploadProductImage } from "@/lib/product-image";
 import { slugify } from "@/lib/slug";
 import { trySupabase } from "@/lib/supabase";
@@ -199,7 +201,18 @@ function OwnerProducts() {
       const categoryId = await resolveCategoryId();
       let imagePath = form.imagePath;
       if (imageFile) {
-        imagePath = await uploadProductImage(sb, tenant.slug, imageFile);
+        let optimized: File;
+        try {
+          optimized = await optimizeImageToWebp(imageFile);
+        } catch (err) {
+          const message =
+            err instanceof Error && err.message
+              ? err.message
+              : "Не удалось обработать изображение";
+          toast.error(message);
+          throw new Error(message);
+        }
+        imagePath = await uploadProductImage(sb, tenant.slug, optimized);
       }
 
       if (editorMode === "create") {
@@ -500,7 +513,7 @@ function OwnerProducts() {
               <Input
                 id="product-image"
                 type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
+                accept="image/jpeg,image/png,image/webp,image/gif,image/heic,image/heif,.heic,.heif"
                 onChange={onPickImage}
                 disabled={busy}
               />

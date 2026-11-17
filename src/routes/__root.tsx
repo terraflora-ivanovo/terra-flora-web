@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-router";
 
 import { ScrollToTop } from "@/components/site/ScrollToTop";
+import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "@/lib/lovable-error-reporting";
 import appCss from "../styles.css?url";
 
@@ -154,6 +155,7 @@ function RootComponent() {
         </main>
       </div>
       <ScrollToTop />
+      <Toaster />
     </QueryClientProvider>
   );
 }
